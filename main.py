@@ -19,23 +19,29 @@ def remove_footer_hamburger():
     st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 def copyright_html():
-    st.write('')
+    ''''''
     st.markdown(f'<div class="copyright">Copyright © 2020 - 2021 <a href="https://tatiaris.com">Rishabh Tatia</a></div>', unsafe_allow_html=True)
 
 def load_html_code(fname):
     homepage_html = open(f'frontend/{fname}', 'r').read()
     components.html(homepage_html, height=120)
 
-def display_df(dframe):
-    st.write(dframe)
+def display_page_info(header, subheader):
+    st.header(header)
+    subheader
+    ''''''
+    ''''''
 
 try:
     remove_footer_hamburger()
+    display_page_info('Machine Learning Genie', 'Quickly analyze your dataset and generate predictions')
+
     data_file = st.file_uploader('Upload your .csv data file here')
 
     if data_file is not None:
         dataframe = pd.read_csv(data_file)
-        display_df(dataframe)
+        '''Original Dataset:'''
+        dataframe
 
         col_names = dataframe.columns.values.tolist()
         input_vars = st.multiselect('Input Variables:', col_names)
@@ -60,7 +66,8 @@ try:
                 final_inp_vars.extend(unique_categories)
                 final_inp_vars.remove(v)
         
-        display_df(dataframe)
+        '''Transformed Dataset:'''
+        dataframe
 
         training_vars = st.multiselect('Choose the final input variables:', final_inp_vars, default=final_inp_vars)
         output_var = st.selectbox('Output Variables:', list(set(col_names) - set(input_vars)))
@@ -79,9 +86,11 @@ try:
             elif (chosen_model == 'Lasso Regression'):
                 ml_model = Lasso(alpha=0.1)
 
-            ml_model.fit(X_train, Y_train)
-
-            st.latex(f'R^{2} = {ml_model.score(X_test, Y_test)}')
+            try:
+                ml_model.fit(X_train, Y_train)
+                st.latex(f'R^{2} = {ml_model.score(X_test, Y_test)}')
+            except:
+                st.error("""One or more variable types are invalid. Please fix them to proceed.""")
 
     copyright_html()
 
